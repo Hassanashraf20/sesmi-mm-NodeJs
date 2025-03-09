@@ -1,0 +1,7 @@
+applications:
+  - name: SESMI-MM-NODEJS
+    memory: 1G
+    disk_quota: 1G
+    buildpacks:
+      - nodejs_buildpack
+    command: npm start
