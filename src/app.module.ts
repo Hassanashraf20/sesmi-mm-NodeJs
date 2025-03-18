@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContractPoModule } from './contract-po/contract-po.module';
 import { ValuehelpModule } from './valuehelp/valuehelp.module';
 import { CurrencyModule } from './currency/currency.module';
+import { BoqModule } from './boq/boq.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CurrencyModule } from './currency/currency.module';
     }),
     ValuehelpModule,
     CurrencyModule,
+    BoqModule,
   ],
   controllers: [],
   providers: [],

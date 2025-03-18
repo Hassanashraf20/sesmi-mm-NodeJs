@@ -13,8 +13,9 @@ export class CurrencyService {
   constructor(private readonly configService: ConfigService) {}
 
   async getCurrency(vendor: string) {
+    console.log('hereeer');
     const sapUrl = this.configService.get<string>('SAP_BASE_URL');
-    const url = `${sapUrl}/GetCurrencyExecuteAction`;
+    const url = `${sapUrl}/GetCurrencyExecuteAction?Vendor='${vendor}'`;
     try {
       const response = await executeHttpRequest(
         {
@@ -22,10 +23,10 @@ export class CurrencyService {
         },
         {
           method: 'GET',
-          params: { Vendor: `'${vendor}'` },
           headers: this.getSapHeaders(),
         },
       );
+      console.log(response.data);
       return { Currency: response.data.d.Currency };
     } catch (error) {
       this.logger.error('SAP Request Failed', error.stack);

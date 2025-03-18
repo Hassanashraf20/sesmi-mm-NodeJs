@@ -24,4 +24,10 @@ export class ContractPoController {
       createContractPODto,
     );
   }
+
+  @Post('PO')
+  async poExecuteAction(@Req() req: any) {
+    console.log('Request controller', req.body);
+    return await this.contractPoService.poExecuteAction(req);
+  }
 }

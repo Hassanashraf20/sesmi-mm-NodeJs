@@ -6,7 +6,7 @@ export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {}
 
   @Get()
-  async getCurrency(@Query('vendor') vendor: string) {
+  async getCurrency(@Query('Vendor') vendor: string) {
     return this.currencyService.getCurrency(vendor);
   }
 }
