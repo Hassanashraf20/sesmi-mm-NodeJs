@@ -5,12 +5,16 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
+import { SapFetchService } from 'src/sap-fetch/sap-fetch.service';
 
 @Injectable()
 export class BoqService {
   private readonly logger = new Logger(BoqService.name);
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly sapFetch: SapFetchService,
+  ) {}
 
   async getBoqSubItems(filters: any): Promise<any> {
     const filterString = this.buildODataBoqSubItemFilter(filters);
@@ -27,7 +31,7 @@ export class BoqService {
         },
         {
           method: 'GET',
-          headers: this.getSapHeaders(),
+          headers: this.sapFetch.getSapHeaders(),
         },
       );
 
@@ -51,7 +55,7 @@ export class BoqService {
         },
         {
           method: 'GET',
-          headers: this.getSapHeaders(),
+          headers: this.sapFetch.getSapHeaders(),
         },
       );
       return response.data.d.results;
@@ -107,18 +111,5 @@ export class BoqService {
     }
 
     return filterConditions.length > 0 ? filterConditions.join(' and ') : '';
-  }
-
-  private getSapHeaders() {
-    return {
-      Cookie: `sap-usercontext=sap-client=${this.configService.get('SAP_CLIENT')}`,
-      Authorization:
-        'Basic ' +
-        Buffer.from(
-          `${this.configService.get('SAP_USERNAME')}:${this.configService.get('SAP_PASSWORD')}`,
-        ).toString('base64'),
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
   }
 }

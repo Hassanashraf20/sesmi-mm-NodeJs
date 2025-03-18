@@ -1,19 +1,16 @@
 import {
-  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ContractPOHeader } from './contractP0.entity';
 import { Repository } from 'typeorm';
 import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
-import { CreateContractPOHeaderDto } from './DTO/ContractPo.dto';
 import { ConfigService } from '@nestjs/config';
-import { request } from 'http';
+import { SapFetchService } from 'src/sap-fetch/sap-fetch.service';
 
 @Injectable()
 export class ContractPoService {
@@ -22,6 +19,7 @@ export class ContractPoService {
     @InjectRepository(ContractPOHeader)
     private readonly ContractPORepository: Repository<ContractPOHeader>,
     private readonly configService: ConfigService,
+    private readonly sapFetch: SapFetchService,
   ) {}
 
   async createContractPOHeader(req: any) {
@@ -53,33 +51,10 @@ export class ContractPoService {
     };
     let formattedDto = formatDateFields(req.body);
 
-    const authHeader = {
-      Authorization:
-        'Basic ' + Buffer.from('s.ahmed:Sa@123456789').toString('base64'),
-      Cookie: 'sap-usercontext=sap-client=210',
-      'x-csrf-token': 'Fetch',
-    };
+    const csrfToken = await this.sapFetch.fetchCsrfToken();
     try {
-      console.log('HERERERERERER');
-      // Step 1: Fetch CSRF Token
-      const csrfResponse = await executeHttpRequest(
-        {
-          url: 'http://S4H-QAS.bhgroup.local:8003/sap/opu/odata/CICSE/SESMI_SRV/',
-        },
-        {
-          method: 'GET',
-          headers: authHeader,
-        },
-        { fetchCsrfToken: true },
-      );
-      if (!csrfResponse.headers || !csrfResponse.headers['x-csrf-token']) {
-        console.error('CSRF Token missing from response', csrfResponse);
-        throw new InternalServerErrorException('CSRF Token missing');
-      }
-      const csrfToken = csrfResponse.headers['x-csrf-token'];
-      // Step 2: Send Data to SAP
       req.headers['x-csrf-token'] = csrfToken;
-      console.log('csrf', csrfToken);
+      // Step 2: Send Data to SAP
       const response = await executeHttpRequest(
         {
           url: 'http://S4H-QAS.bhgroup.local:8003/sap/opu/odata/CICSE/SESMI_SRV/ContractPOHeaderSet?sap-client=210',
@@ -87,13 +62,7 @@ export class ContractPoService {
         {
           method: 'POST',
           data: formattedDto,
-          headers: {
-            Authorization:
-              'Basic ' + Buffer.from('s.ahmed:Sa@123456789').toString('base64'),
-            Cookie: 'sap-usercontext=sap-client=210',
-            Accept: 'application/json',
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
+          headers: this.sapFetch.getSapHeaders(),
         },
       );
       this.logger.debug('Response received from SAP.');
@@ -144,7 +113,7 @@ export class ContractPoService {
 
   async poExecuteAction(req: any) {
     console.log('Request Service', req.body);
-    const csrfToken = await this.fetchCsrfToken();
+    const csrfToken = await this.sapFetch.fetchCsrfToken();
     console.log(csrfToken);
     const {
       PoNo,
@@ -165,7 +134,7 @@ export class ContractPoService {
         },
         {
           method: 'POST',
-          headers: this.getSapHeaders(),
+          headers: this.sapFetch.getSapHeaders(),
         },
       );
 
@@ -175,45 +144,6 @@ export class ContractPoService {
       throw new InternalServerErrorException('Failed to execute PO action.');
     }
   }
-
-  private async fetchCsrfToken(): Promise<string> {
-    try {
-      const url = this.configService.get<string>('SAP_BASE_URL');
-      console.log('url', url);
-      if (!url) {
-        throw new Error('SAP_BASE_URL is not defined in the configuration.');
-      }
-
-      const csrfResponse = await executeHttpRequest(
-        { url },
-        {
-          method: 'GET',
-          headers: {
-            ...this.getSapHeaders(),
-            'x-csrf-token': 'Fetch',
-          },
-        },
-      );
-
-      return csrfResponse.headers['x-csrf-token'];
-    } catch (error) {
-      this.logger.error('Error executing PO action:', error);
-      throw new InternalServerErrorException('Failed to execute PO action.');
-    }
-  }
-  private getSapHeaders() {
-    return {
-      Cookie: `sap-usercontext=sap-client=${this.configService.get('SAP_CLIENT')}`,
-      Authorization:
-        'Basic ' +
-        Buffer.from(
-          `${this.configService.get('SAP_USERNAME')}:${this.configService.get('SAP_PASSWORD')}`,
-        ).toString('base64'),
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-  }
-
 
   async GetPOHeader(query: any) {
     try {
@@ -244,5 +174,4 @@ export class ContractPoService {
       );
     }
   }
-
 }

@@ -5,6 +5,7 @@ import { ContractPoModule } from './contract-po/contract-po.module';
 import { ValuehelpModule } from './valuehelp/valuehelp.module';
 import { CurrencyModule } from './currency/currency.module';
 import { BoqModule } from './boq/boq.module';
+import { SapFetchModule } from './sap-fetch/sap-fetch.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { BoqModule } from './boq/boq.module';
     ValuehelpModule,
     CurrencyModule,
     BoqModule,
+    SapFetchModule,
   ],
   controllers: [],
   providers: [],

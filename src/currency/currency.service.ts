@@ -5,13 +5,16 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
+import { SapFetchService } from 'src/sap-fetch/sap-fetch.service';
 
 @Injectable()
 export class CurrencyService {
   private readonly logger = new Logger(CurrencyService.name);
 
-  constructor(private readonly configService: ConfigService) {}
-
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly sapFetch: SapFetchService,
+  ) {}
   async getCurrency(vendor: string) {
     console.log('hereeer');
     const sapUrl = this.configService.get<string>('SAP_BASE_URL');
@@ -23,7 +26,7 @@ export class CurrencyService {
         },
         {
           method: 'GET',
-          headers: this.getSapHeaders(),
+          headers: this.sapFetch.getSapHeaders(),
         },
       );
       console.log(response.data);
@@ -34,18 +37,5 @@ export class CurrencyService {
         'Failed to fetch ValueHelpSet data',
       );
     }
-  }
-
-  private getSapHeaders() {
-    return {
-      Cookie: `sap-usercontext=sap-client=${this.configService.get('SAP_CLIENT')}`,
-      Authorization:
-        'Basic ' +
-        Buffer.from(
-          `${this.configService.get('SAP_USERNAME')}:${this.configService.get('SAP_PASSWORD')}`,
-        ).toString('base64'),
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
   }
 }

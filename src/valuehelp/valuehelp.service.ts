@@ -6,18 +6,19 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
+import { SapFetchService } from 'src/sap-fetch/sap-fetch.service';
 
 @Injectable()
 export class ValuehelpService {
   private readonly logger = new Logger(ValuehelpService.name);
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly sapFetch: SapFetchService,
+  ) {}
 
   async getValueHelp(filters: any[]): Promise<any[]> {
     const filterString = this.parseFilters(filters);
-    // if (!filterString) {
-    //   throw new BadRequestException('No valid filters provided.');
-    // }
     try {
       const sapUrl = this.configService.get<string>('SAP_BASE_URL');
       const url = `${sapUrl}/ValueHelpSet?$filter=${encodeURIComponent(filterString)}`;
@@ -27,7 +28,7 @@ export class ValuehelpService {
         },
         {
           method: 'GET',
-          headers: this.getSapHeaders(),
+          headers: this.sapFetch.getSapHeaders(),
         },
       );
 
@@ -38,19 +39,6 @@ export class ValuehelpService {
         'Failed to fetch ValueHelpSet data',
       );
     }
-  }
-
-  private getSapHeaders() {
-    return {
-      Cookie: `sap-usercontext=sap-client=${this.configService.get('SAP_CLIENT')}`,
-      Authorization:
-        'Basic ' +
-        Buffer.from(
-          `${this.configService.get('SAP_USERNAME')}:${this.configService.get('SAP_PASSWORD')}`,
-        ).toString('base64'),
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
   }
   private parseFilters(filters: any[]): string {
     const filterConditions: string[] = [];
