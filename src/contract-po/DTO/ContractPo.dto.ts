@@ -26,11 +26,11 @@ export class CreateContractPOHeaderDto {
 
   compCode?: string;
 
-  docDate?: Date;
+  docDate?: string;
 
-  vperStart?: Date;
+  vperStart?: string;
 
-  vperEnd?: Date;
+  vperEnd?: string;
 
   status?: string;
 
@@ -48,15 +48,15 @@ export class CreateContractPOHeaderDto {
 
   refContract?: string;
 
-  creationDate?: Date;
+  creationDate?: string;
 
-  validFrom?: Date;
+  validFrom?: string;
 
-  validTo?: Date;
+  validTo?: string;
 
-  signinDate?: Date;
+  signinDate?: string;
 
-  revisedValidTo?: Date;
+  revisedValidTo?: string;
 
   indexMonth?: string;
 

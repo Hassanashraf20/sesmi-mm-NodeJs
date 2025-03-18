@@ -2,159 +2,225 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity('ContractPOHeader')
 export class ContractPOHeader {
-  @PrimaryColumn({ name: 'PONUMBER', type: 'nvarchar', length: 13 })
-  poNumber: string;
+  @PrimaryColumn()
+  PoNumber: string;
 
-  @Column({ name: 'FLAG', type: 'nvarchar', length: 1, nullable: true })
-  flag: string;
+  @Column({ type: 'nvarchar', length: 1, nullable: true })
+  AsBuilt: string;
 
-  @Column({ name: 'DOCTYPE', type: 'nvarchar', length: 4 })
-  docType: string;
+  @Column({ type: 'nvarchar', length: 3, nullable: true })
+  CommencementId: string;
 
-  @Column({ name: 'PROJECT', type: 'nvarchar', length: 24 })
-  project: string;
+  @Column({ type: 'nvarchar', length: 3, nullable: true })
+  ContDurationMonth: string;
 
-  @Column({ name: 'VENDOR', type: 'nvarchar', length: 13 })
-  vendor: string;
+  @Column({ type: 'nvarchar', length: 1, nullable: true })
+  ContractTermsInd: string;
 
-  @Column({ name: 'PURCHORG', type: 'nvarchar', length: 4 })
-  purchOrg: string;
+  @Column({ type: 'nvarchar', length: 12, nullable: true })
+  LastChangedAsBuiltBy: string;
 
-  @Column({ name: 'PURCHDOC', type: 'nvarchar', length: 10, nullable: true })
-  purchDoc: string;
+  @Column({ type: 'decimal', precision: 17, scale: 2, nullable: true })
+  ProcessContractValue: number;
 
-  @Column({ name: 'MESSAGE', type: 'nvarchar', length: 220, nullable: true })
-  message: string;
+  @Column({ type: 'nvarchar', length: 40, nullable: true })
+  ProjectDesc: string;
 
-  @Column({ name: 'PURGROUP', type: 'nvarchar', length: 3 })
-  purGroup: string;
+  @Column({ type: 'nvarchar', length: 3, nullable: true })
+  ContDurationDays: string;
 
-  @Column({ name: 'COMPCODE', type: 'nvarchar', length: 4 })
-  compCode: string;
+  @Column({ type: 'date', nullable: true })
+  DateOfApplying: Date;
 
-  @Column({ name: 'DOCDATE', type: 'date', nullable: true })
-  docDate: Date;
+  @Column({ type: 'decimal', nullable: true })
+  Version: number;
 
-  @Column({ name: 'VPERSTART', type: 'date', nullable: true })
-  vperStart: Date;
+  @Column({ type: 'date', nullable: true })
+  CommencementDate: Date;
 
-  @Column({ name: 'VPEREND', type: 'date', nullable: true })
-  vperEnd: Date;
+  @Column({ type: 'decimal', precision: 17, scale: 2, nullable: true })
+  EstimatedContractValue: number;
 
-  @Column({ name: 'STATUS', type: 'nvarchar', length: 25, nullable: true })
-  status: string;
+  @Column({ type: 'decimal', precision: 17, scale: 2, nullable: true })
+  OriginalContractValue: number;
 
-  @Column({ name: 'DELETEIND', type: 'nvarchar', length: 1, nullable: true })
-  deleteInd: string;
+  @Column({ type: 'nvarchar', length: 25, nullable: true })
+  Userstatus: string;
 
-  @Column({ name: 'CONTRACTDESC', type: 'nvarchar', length: 40 })
-  contractDesc: string;
+  @Column({ type: 'decimal', precision: 17, scale: 2, nullable: true })
+  TotalContractValue: number;
 
-  @Column({ name: 'LONGDESC', type: 'nvarchar', length: 300 })
-  longDesc: string;
+  @Column({ type: 'nvarchar', length: 12, nullable: true })
+  Workitem: string;
 
-  @Column({ name: 'CURRENCY', type: 'nvarchar', length: 5 })
-  currency: string;
+  @Column({ type: 'nvarchar', length: 3, nullable: true })
+  Exempted: string;
 
-  @Column({ name: 'MEASMETHOD', type: 'nvarchar', length: 4 })
-  measMethod: string;
+  @Column({ type: 'decimal', precision: 17, scale: 2, nullable: true })
+  VariationOrderValue: number;
 
-  @Column({ name: 'CONSTRUCTIONTYPE', type: 'nvarchar', length: 4 })
-  constructionType: string;
+  @Column({ type: 'decimal', precision: 17, scale: 2, nullable: true })
+  AddendumValue: number;
 
-  @Column({ name: 'REFCONTRACT', type: 'nvarchar', length: 55, nullable: true })
-  refContract: string;
+  @Column({ type: 'nvarchar', length: 25, nullable: true })
+  Overviewstatus: string;
 
-  @Column({ name: 'CREATIONDATE', type: 'date', nullable: true })
-  creationDate: Date;
+  @Column({ type: 'nvarchar', length: 2, nullable: true })
+  ReleaseStatus: string;
 
-  @Column({ name: 'VALIDFROM', type: 'date', nullable: true })
-  validFrom: Date;
+  @Column({ type: 'decimal', precision: 17, scale: 2, nullable: true })
+  RevisedContractValue: number;
 
-  @Column({ name: 'VALIDTO', type: 'date', nullable: true })
-  validTo: Date;
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  SerType: string;
 
-  @Column({ name: 'SIGNINDATE', type: 'date', nullable: true })
-  signinDate: Date;
+  @Column({ type: 'nvarchar', length: 20, nullable: true })
+  ContractTypeTxt: string;
 
-  @Column({ name: 'REVISEDVALIDTO', type: 'date', nullable: true })
-  revisedValidTo: Date;
+  @Column({ type: 'nvarchar', length: 30, nullable: true })
+  SerTypeDesc: string;
 
-  @Column({ name: 'INDEXMONTH', type: 'nvarchar', length: 50, nullable: true })
-  indexMonth: string;
+  @Column({ type: 'decimal', precision: 17, scale: 2, nullable: true })
+  VariationOrderPre: number;
 
-  @Column({ name: 'CONSULTANT', type: 'nvarchar', length: 10, nullable: true })
-  consultant: string;
+  @Column({ type: 'nvarchar', length: 25, nullable: true })
+  CompDesc: string;
 
-  @Column({
-    name: 'CONSULTANTNAME',
-    type: 'nvarchar',
-    length: 35,
-    nullable: true,
-  })
-  consultantName: string;
+  @Column({ type: 'nvarchar', length: 20, nullable: true })
+  PurchOrgTxt: string;
 
-  @Column({ name: 'SS', type: 'nvarchar', length: 60, nullable: true })
-  ss: string;
+  @Column({ type: 'nvarchar', length: 35, nullable: true })
+  ConsultantName: string;
 
-  @Column({ name: 'IR', type: 'nvarchar', length: 60, nullable: true })
-  ir: string;
+  @Column({ type: 'nvarchar', length: 24, nullable: true })
+  ProjetTemp: string;
 
-  @Column({ name: 'SUPERIORWBS', type: 'nvarchar', length: 24, nullable: true })
-  superiorWbs: string;
+  @Column({ type: 'nvarchar', length: 25, nullable: true })
+  StatusOr: string;
 
-  @Column({ name: 'CREATIONTYPE', type: 'nvarchar', length: 1 })
-  creationType: string;
+  @Column({ type: 'nvarchar', length: 24, nullable: true })
+  SuperiorWbs: string;
 
-  @Column({ name: 'MARKUP', type: 'decimal', precision: 3, scale: 1 })
-  markUp: number;
+  @Column({ type: 'nvarchar', length: 25, nullable: true })
+  TempStatus: string;
 
-  @Column({ name: 'VENDORNAME', type: 'nvarchar', length: 35 })
-  vendorName: string;
+  @Column({ type: 'nvarchar', length: 35, nullable: true })
+  VendorName: string;
 
-  @Column({
-    name: 'ESTIMATEDCONTRACTVALUE',
-    type: 'decimal',
-    precision: 17,
-    scale: 2,
-  })
-  estimatedContractValue: number;
+  @Column({ type: 'nvarchar', length: 40, nullable: true })
+  WbsDesc: string;
 
-  @Column({
-    name: 'ORIGINALCONTRACTVALUE',
-    type: 'decimal',
-    precision: 17,
-    scale: 2,
-  })
-  originalContractValue: number;
+  @Column({ type: 'date', nullable: true })
+  CreatedOn: Date;
 
-  @Column({
-    name: 'TOTALCONTRACTVALUE',
-    type: 'decimal',
-    precision: 17,
-    scale: 2,
-  })
-  totalContractValue: number;
+  @Column({ type: 'nvarchar', length: 1, nullable: true })
+  CreationType: string;
 
-  @Column({
-    name: 'VARIATIONORDERVALUE',
-    type: 'decimal',
-    precision: 17,
-    scale: 2,
-  })
-  variationOrderValue: number;
+  @Column({ type: 'decimal', precision: 3, scale: 1, nullable: true })
+  MarkUp: number;
 
-  @Column({ name: 'ADDENDUMVALUE', type: 'decimal', precision: 17, scale: 2 })
-  addendumValue: number;
+  @Column({ type: 'date', nullable: true })
+  LastChangedOn: Date;
 
-  @Column({
-    name: 'REVISEDCONTRACTVALUE',
-    type: 'decimal',
-    precision: 17,
-    scale: 2,
-  })
-  revisedContractValue: number;
+  @Column({ type: 'date', nullable: true })
+  DocDate: Date;
 
-  @Column({ name: 'SERTYPE', type: 'nvarchar', length: 4, nullable: true })
-  serType: string;
+  @Column({ type: 'date', nullable: true })
+  VperStart: Date;
+
+  @Column({ type: 'date', nullable: true })
+  CreationDate: Date;
+
+  @Column({ type: 'date', nullable: true })
+  VperEnd: Date;
+
+  @Column({ type: 'date', nullable: true })
+  SigninDate: Date;
+
+  @Column({ type: 'date', nullable: true })
+  ValidFrom: Date;
+
+  @Column({ type: 'date', nullable: true })
+  ValidTo: Date;
+
+  @Column({ type: 'date', nullable: true })
+  RevisedValidTo: Date;
+
+  @Column({ type: 'nvarchar', length: 24, nullable: true })
+  Project: string;
+
+  @Column({ type: 'nvarchar', length: 12, nullable: true })
+  CreatedBy: string;
+
+  @Column({ type: 'nvarchar', length: 220, nullable: true })
+  Message: string;
+
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  DocParNo: string;
+
+  @Column({ type: 'nvarchar', length: 12, nullable: true })
+  LastChangedBy: string;
+
+  @Column({ type: 'nvarchar', length: 25, nullable: true })
+  Status: string;
+
+  @Column({ type: 'nvarchar', length: 10, nullable: true })
+  DocumentId: string;
+
+  @Column({ type: 'nvarchar', length: 1, nullable: true })
+  Flag: string;
+
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  PoStatus: string;
+
+  @Column({ type: 'nvarchar', length: 10, nullable: true })
+  PurchDoc: string;
+
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  DocType: string;
+
+  @Column({ type: 'nvarchar', length: 10, nullable: true })
+  Vendor: string;
+
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  PurchOrg: string;
+
+  @Column({ type: 'nvarchar', length: 3, nullable: true })
+  PurGroup: string;
+
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  CompCode: string;
+
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  MeasMethod: string;
+
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  ConstructionType: string;
+
+  @Column({ type: 'nvarchar', length: 55, nullable: true })
+  RefContract: string;
+
+  @Column({ type: 'nvarchar', length: 1, nullable: true })
+  DeleteInd: string;
+
+  @Column({ type: 'nvarchar', length: 5, nullable: true })
+  Currency: string;
+
+  @Column({ type: 'nvarchar', length: 50, nullable: true })
+  IndexMonth: string;
+
+  @Column({ type: 'nvarchar', length: 10, nullable: true })
+  Consultant: string;
+
+  @Column({ type: 'nvarchar', length: 60, nullable: true })
+  Ss: string;
+
+  @Column({ type: 'nvarchar', length: 60, nullable: true })
+  Ir: string;
+
+  @Column({ type: 'nvarchar', length: 40, nullable: true })
+  ContractDesc: string;
+
+  @Column({ type: 'nvarchar', length: 300, nullable: true })
+  LongDesc: string;
 }

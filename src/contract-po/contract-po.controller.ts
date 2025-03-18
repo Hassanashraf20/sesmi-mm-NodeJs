@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
+  Query,
   Req,
   UsePipes,
   ValidationPipe,
@@ -14,15 +16,13 @@ export class ContractPoController {
   constructor(private readonly contractPoService: ContractPoService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
-  createContractPO(
-    @Req() req,
-    @Body() createContractPODto: CreateContractPOHeaderDto,
-  ) {
-    return this.contractPoService.createContractPOHeader(
-      req,
-      createContractPODto,
-    );
+  createContractPO(@Req() req) {
+    return this.contractPoService.createContractPOHeader(req);
+  }
+
+  @Get('po-header')
+  async getPOHeaders(@Query() query: any) {
+    return this.contractPoService.GetPOHeader(query);
   }
 
   @Post('PO')
