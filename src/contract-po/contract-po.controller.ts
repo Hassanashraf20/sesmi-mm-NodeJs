@@ -24,4 +24,10 @@ export class ContractPoController {
   async getPOHeaders(@Query() query: any) {
     return this.contractPoService.GetPOHeader(query);
   }
+
+  @Post('PO')
+  async poExecuteAction(@Req() req: any) {
+    console.log('Request controller', req.body);
+    return await this.contractPoService.poExecuteAction(req);
+  }
 }

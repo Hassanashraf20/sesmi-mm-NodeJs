@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContractPoModule } from './contract-po/contract-po.module';
+import { ValuehelpModule } from './valuehelp/valuehelp.module';
+import { CurrencyModule } from './currency/currency.module';
+import { BoqModule } from './boq/boq.module';
 
 @Module({
   imports: [
@@ -25,8 +26,11 @@ import { ContractPoModule } from './contract-po/contract-po.module';
       },
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
+    ValuehelpModule,
+    CurrencyModule,
+    BoqModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
