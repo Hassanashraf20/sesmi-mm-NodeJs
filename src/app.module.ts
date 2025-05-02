@@ -6,31 +6,19 @@ import { ValuehelpModule } from './valuehelp/valuehelp.module';
 import { CurrencyModule } from './currency/currency.module';
 import { BoqModule } from './boq/boq.module';
 import { SapFetchModule } from './sap-fetch/sap-fetch.module';
+import { DatabaseModule } from './database/database.module';
+import { ContractTermsModule } from './contract-terms/contract-terms.module';
 
 @Module({
   imports: [
     ContractPoModule,
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'sap',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      synchronize: false,
-      encrypt: true,
-      sslValidateCertificate: false,
-      logging: ['query', 'error'],
-      extra: {
-        connectTimeout: 60000,
-        requestTimeout: 60000,
-      },
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-    }),
     ValuehelpModule,
     CurrencyModule,
     BoqModule,
     SapFetchModule,
+    DatabaseModule,
+    ContractTermsModule,
   ],
   controllers: [],
   providers: [],

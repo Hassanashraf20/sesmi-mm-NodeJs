@@ -16,7 +16,6 @@ export class CurrencyService {
     private readonly sapFetch: SapFetchService,
   ) {}
   async getCurrency(vendor: string) {
-    console.log('hereeer');
     const sapUrl = this.configService.get<string>('SAP_BASE_URL');
     const url = `${sapUrl}/GetCurrencyExecuteAction?Vendor='${vendor}'`;
     try {

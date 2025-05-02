@@ -24,6 +24,7 @@
     "@nestjs/config": "^4.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^11.1.5",
     "@nestjs/typeorm": "^11.0.0",
     "@sap-cloud-sdk/core": "^1.54.2",
     "@sap-cloud-sdk/http-client": "^3.26.1",
@@ -31,11 +32,12 @@
     "axios": "^1.8.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "hdb-pool": "^0.1.6",
     "odata-v4-parser": "^0.1.29",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.21"
   },
   "devDependencies": {

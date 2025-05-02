@@ -18,13 +18,11 @@ export class ContractPoService {
   constructor(
     @InjectRepository(ContractPOHeader)
     private readonly ContractPORepository: Repository<ContractPOHeader>,
-    private readonly configService: ConfigService,
     private readonly sapFetch: SapFetchService,
   ) {}
 
   async createContractPOHeader(req: any) {
     this.logger.log('Starting createContractPOHeader...');
-
     const formatDateFields = (dto: any) => {
       const dateFields = [
         'DocDate',
@@ -46,7 +44,6 @@ export class ContractPoService {
           dto[field] = dto[field] + 'T00:00:00';
         }
       });
-
       return dto;
     };
     let formattedDto = formatDateFields(req.body);
@@ -54,7 +51,6 @@ export class ContractPoService {
     const csrfToken = await this.sapFetch.fetchCsrfToken();
     try {
       req.headers['x-csrf-token'] = csrfToken;
-      // Step 2: Send Data to SAP
       const response = await executeHttpRequest(
         {
           url: 'http://S4H-QAS.bhgroup.local:8003/sap/opu/odata/CICSE/SESMI_SRV/ContractPOHeaderSet?sap-client=210',

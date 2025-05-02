@@ -9,5 +9,5 @@ services:
       - .env
     restart: unless-stopped
     volumes:
-      - .:/app 
-    command: ["npm", "run", "start"] 
+      - .:/app
+    command: ['npm', 'run', 'start']
