@@ -4,9 +4,7 @@ import { CreateContractTermsDto } from './DTO/createContractTerms.dto';
 
 @Controller('contract-terms')
 export class ContractTermsController {
-  constructor(
-    @Inject() private readonly contractTermsService: ContractTermsService,
-  ) {}
+  constructor(private readonly contractTermsService: ContractTermsService) {}
   @Post()
   async createContractTerms(@Body() contractTerms: CreateContractTermsDto) {
     return this.contractTermsService.createContractTerms(contractTerms);

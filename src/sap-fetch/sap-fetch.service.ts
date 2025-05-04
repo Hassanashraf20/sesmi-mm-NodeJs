@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  Logger,
   LoggerService,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -8,10 +9,8 @@ import { executeHttpRequest } from '@sap-cloud-sdk/core';
 
 @Injectable()
 export class SapFetchService {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly logger: LoggerService,
-  ) {}
+  private readonly logger = new Logger(SapFetchService.name);
+  constructor(private readonly configService: ConfigService) {}
   async fetchCsrfToken(): Promise<string> {
     try {
       const url = this.configService.get<string>('SAP_BASE_URL');

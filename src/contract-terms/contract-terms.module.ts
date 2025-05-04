@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ContractTermsController } from './contract-terms.controller';
 import { ContractTermsService } from './contract-terms.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ContractTerms } from './entities/contract-terms.entity';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([ContractTerms])],
   controllers: [ContractTermsController],
-  providers: [ContractTermsService]
+  providers: [ContractTermsService],
 })
 export class ContractTermsModule {}
