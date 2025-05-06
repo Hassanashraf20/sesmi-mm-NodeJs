@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ContractTerms } from 'src/contract-terms/entities/contract-terms.entity';
 
 @Module({
   imports: [
@@ -9,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       port: Number(process.env.DB_PORT),
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
+      entities: [__dirname + '/**/*.entity{.ts,.js}', ContractTerms],
       synchronize: false,
       encrypt: true,
       sslValidateCertificate: false,
@@ -17,7 +19,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         connectTimeout: 60000,
         requestTimeout: 60000,
       },
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
   ],
 })

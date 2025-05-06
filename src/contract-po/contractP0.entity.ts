@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { ContractTerms } from 'src/contract-terms/entities/contract-terms.entity';
+import { Entity, Column, PrimaryColumn, OneToOne } from 'typeorm';
 
 @Entity('ContractPOHeader')
 export class ContractPOHeader {
@@ -223,4 +224,6 @@ export class ContractPOHeader {
 
   @Column({ type: 'nvarchar', length: 300, nullable: true })
   LongDesc: string;
+  // @OneToOne(() => ContractTerms, (contractTerms) => contractTerms.id)
+  // contractTerm: ContractTerms;
 }

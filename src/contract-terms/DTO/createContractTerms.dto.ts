@@ -1,44 +1,29 @@
-import { IsArray, IsNotEmpty, IsOptional } from 'class-validator';
-
 export class CreateContractTermsDto {
-  @IsNotEmpty()
-  contractId: string;
-
-  @IsNotEmpty()
-  companyId: string;
-
-  @IsNotEmpty()
-  projectId: string;
-
-  @IsNotEmpty()
-  vendorId: string;
-
-  @IsOptional()
-  totalValue: number;
-
-  @IsOptional()
-  profit: number;
-
-  @IsOptional()
-  vatPercentage: number;
-
-  // @IsArray()
-  // withholdingTaxes: WithholdingTaxDto[];
-  @IsOptional()
-  withholdingTaxes: any;
-
-  //   @IsArray()
-  //   downPayments: DownPaymentDto[];
-  @IsOptional()
-  downPayments: any;
-
-  @IsNotEmpty()
-  @IsOptional()
-  paymentTerms: string;
-
-  @IsOptional()
-  variationTolerance: number;
-
-  @IsOptional()
-  revisionTolerance: number;
+  ContractNo: any;
+  Version: number;
+  DeliveryDate?: Date;
+  Status?: string;
+  CreatedOn?: Date;
+  CreatedBy?: string;
+  LastChangedOn?: Date;
+  LastChangedBy?: string;
+  ShipInvoicePerc?: number;
+  CompCode?: string;
+  PaymentTermsCode?: string;
+  PaymentTermsDays?: number;
+  VariationOriginalPer?: number;
+  InflationOriginalPer?: number;
+  RemeasuredOriginalPer?: number;
+  VariationRevisitedPer?: number;
+  InflationRevisitedPer?: number;
+  RemeasuredRevisitedPer?: number;
+  ContractType?: string;
+  ProfitCenter?: string;
+  ProfitCenterName?: string;
+  PriceInclusive?: string;
+  VatCode?: string;
+  TaxCode?: string;
+  TaxAmount?: number;
+  BaseAmount?: number;
+  Overviewstatus?: string;
 }

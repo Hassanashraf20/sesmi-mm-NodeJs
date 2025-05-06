@@ -11,23 +11,22 @@ export class ContractTermsService {
     private readonly ContractTermsRepository: Repository<ContractTerms>,
   ) {}
 
-  async createContractTerms(
-    contractTerms: CreateContractTermsDto,
-  ): Promise<ContractTerms> {
-    const downPayments = this.createDownPayment();
-    const WithholdingTax = this.createWithholdingTax();
-    contractTerms.downPayments = downPayments;
-    contractTerms.withholdingTaxes = WithholdingTax;
-    return await this.ContractTermsRepository.save(contractTerms);
+  async createContractTerms(contractTerms: any): Promise<any> {
+    const newContractTerms = this.ContractTermsRepository.create(contractTerms);
+    return await this.ContractTermsRepository.save(newContractTerms);
   }
 
-  async getContractTerms(contractId: string): Promise<ContractTerms[]> {
+  async getContractTerms(ContractNo: any): Promise<ContractTerms[]> {
     return await this.ContractTermsRepository.find({
-      where: { contractId: contractId },
+      where: { ContractNo: ContractNo },
     });
+  }
+
+  async getAllContractTerms() {
+    return await this.ContractTermsRepository.find();
   }
 
   private createDownPayment() {}
   private createWithholdingTax() {}
-  async getDownPaymentHistory() {}
+  private getDownPaymentHistory() {}
 }

@@ -5,65 +5,94 @@ import {
   Entity,
   OneToMany,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { WithholdingTax } from './WithholdingTax.entity';
-import { DownPayment } from './DownPayment.entity';
-@Entity()
+@Entity('CONT_HEAD')
 export class ContractTerms {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  // @PrimaryGeneratedColumn()
+  // id: number;
+  // @OneToOne(() => ContractPOHeader, (contract) => contract.PoNumber)
+  // @PrimaryColumn({ type: 'nvarchar' })
+  // ContractNo: ContractPOHeader;
+  @PrimaryColumn({ type: 'nvarchar' })
+  ContractNo: string;
+  @PrimaryColumn({ type: 'decimal' })
+  Version: number;
 
-  //   @OneToOne(() => ContractPOHeader, (contract) => contract.contractId)
-  //   contract: ContractPOHeader;
-  @Column()
-  contractId: string;
+  @Column({ type: 'date', nullable: true })
+  DeliveryDate?: Date;
 
-  @Column()
-  companyId: string;
+  @Column({ type: 'nvarchar', length: 25, nullable: true })
+  Status?: string;
 
-  @Column()
-  projectId: string;
+  @Column({ type: 'date', nullable: true })
+  CreatedOn?: Date;
 
-  @Column()
-  vendorId: string;
+  @Column({ type: 'nvarchar', length: 12, nullable: true })
+  CreatedBy?: string;
 
-  @Column('decimal')
-  totalValue: number;
+  @Column({ type: 'date', nullable: true })
+  LastChangedOn?: Date;
 
-  @Column('decimal')
-  profit: number;
+  @Column({ type: 'nvarchar', length: 12, nullable: true })
+  LastChangedBy?: string;
 
-  @Column('decimal')
-  vatPercentage: number;
+  @Column({ type: 'decimal', precision: 15, scale: 2, nullable: true })
+  ShipInvoicePerc?: number;
 
-  @Column()
-  status: string;
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  CompCode?: string;
 
-  @Column({ nullable: true })
-  poNumber: string;
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  PaymentTermsCode?: string;
 
-  @Column()
-  paymentTerms: string;
+  @Column({ type: 'decimal', precision: 3, scale: 0, nullable: true })
+  PaymentTermsDays?: number;
 
-  @Column('decimal')
-  variationTolerance: number;
+  @Column({ type: 'decimal', precision: 15, scale: 3, nullable: true })
+  VariationOriginalPer?: number;
 
-  @Column('decimal')
-  revisionTolerance: number;
-  @Column()
-  vat: string;
+  @Column({ type: 'decimal', precision: 15, scale: 3, nullable: true })
+  InflationOriginalPer?: number;
 
-  @OneToMany(() => WithholdingTax, (tax) => tax.contractTerms)
-  withholdingTaxes: WithholdingTax[];
+  @Column({ type: 'decimal', precision: 15, scale: 3, nullable: true })
+  RemeasuredOriginalPer?: number;
 
-  @OneToMany(() => DownPayment, (dp) => dp.contractTerms)
-  downPayments: DownPayment[];
+  @Column({ type: 'decimal', precision: 15, scale: 3, nullable: true })
+  VariationRevisitedPer?: number;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column({ type: 'decimal', precision: 15, scale: 3, nullable: true })
+  InflationRevisitedPer?: number;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @Column({ type: 'decimal', precision: 15, scale: 3, nullable: true })
+  RemeasuredRevisitedPer?: number;
+
+  @Column({ type: 'nvarchar', length: 4, nullable: true })
+  ContractType?: string;
+
+  @Column({ type: 'nvarchar', length: 10, nullable: true })
+  ProfitCenter?: string;
+
+  @Column({ type: 'nvarchar', length: 20, nullable: true })
+  ProfitCenterName?: string;
+
+  @Column({ type: 'nvarchar', length: 1, nullable: true })
+  PriceInclusive?: string;
+
+  @Column({ type: 'nvarchar', length: 3, nullable: true })
+  VatCode?: string;
+
+  @Column({ type: 'nvarchar', length: 2, nullable: true })
+  TaxCode?: string;
+
+  @Column({ type: 'decimal', precision: 17, scale: 2, nullable: true })
+  TaxAmount?: number;
+
+  @Column({ type: 'decimal', precision: 17, scale: 2, nullable: true })
+  BaseAmount?: number;
+
+  @Column({ type: 'nvarchar', length: 25, nullable: true })
+  Overviewstatus?: string;
 }
