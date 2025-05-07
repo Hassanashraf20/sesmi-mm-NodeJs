@@ -9,5 +9,6 @@ import { SapFetchModule } from 'src/sap-fetch/sap-fetch.module';
   imports: [TypeOrmModule.forFeature([ContractPOHeader]), SapFetchModule],
   providers: [ContractPoService],
   controllers: [ContractPoController],
+  exports: [ContractPoService],
 })
 export class ContractPoModule {}

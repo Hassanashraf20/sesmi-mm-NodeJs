@@ -170,4 +170,11 @@ export class ContractPoService {
       );
     }
   }
+
+  async GetPoNumber(poNumber: any) {
+    const PoNumber = await this.ContractPORepository.findOne({
+      where: { PoNumber: poNumber },
+    });
+    return PoNumber;
+  }
 }
