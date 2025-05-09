@@ -10,15 +10,14 @@ import { ContractTerms } from 'src/contract-terms/entities/contract-terms.entity
       port: Number(process.env.DB_PORT),
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      entities: [__dirname + '/**/*.entity{.ts,.js}', ContractTerms],
+      entities: [
+        __dirname + '/**/*.entity{.ts,.js}',
+        __dirname + '/../**/**/entities/*.entity{.ts,.js}',
+      ],
       synchronize: false,
       encrypt: true,
       sslValidateCertificate: false,
       logging: ['query', 'error'],
-      extra: {
-        connectTimeout: 60000,
-        requestTimeout: 60000,
-      },
     }),
   ],
 })

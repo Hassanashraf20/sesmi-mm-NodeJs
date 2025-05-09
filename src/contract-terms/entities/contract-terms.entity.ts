@@ -1,4 +1,4 @@
-import { ContractPOHeader } from 'src/contract-po/contractP0.entity';
+import { ContractPOHeader } from 'src/contract-po/entities/contractP0.entity';
 import {
   Column,
   CreateDateColumn,
@@ -13,11 +13,11 @@ import {
 export class ContractTerms {
   // @PrimaryGeneratedColumn()
   // id: number;
-  // @OneToOne(() => ContractPOHeader, (contract) => contract.PoNumber)
-  // @PrimaryColumn({ type: 'nvarchar' })
-  // ContractNo: ContractPOHeader;
+  @OneToOne(() => ContractPOHeader, (contract) => contract.PoNumber)
   @PrimaryColumn({ type: 'nvarchar' })
-  ContractNo: string;
+  ContractNo: ContractPOHeader;
+  // @PrimaryColumn({ type: 'nvarchar' })
+  // ContractNo: string;
   @PrimaryColumn({ type: 'decimal' })
   Version: number;
 

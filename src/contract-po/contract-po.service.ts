@@ -6,11 +6,11 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ContractPOHeader } from './contractP0.entity';
 import { Repository } from 'typeorm';
 import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
 import { ConfigService } from '@nestjs/config';
 import { SapFetchService } from 'src/sap-fetch/sap-fetch.service';
+import { ContractPOHeader } from './entities/contractP0.entity';
 
 @Injectable()
 export class ContractPoService {

@@ -1,9 +1,13 @@
 import { ContractTerms } from 'src/contract-terms/entities/contract-terms.entity';
-import { Entity, Column, PrimaryColumn, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToOne, OneToMany } from 'typeorm';
+import { ContractPOItem } from './contractPOItem.entity';
+import { ContractPOSrvItem } from './contractPOSrvItem.entity';
+import { ContractPONote } from './contractPONote.entity';
+import { OrderHeader } from './orderHeader.entity';
 
 @Entity('ContractPOHeader')
 export class ContractPOHeader {
-  @PrimaryColumn()
+  @PrimaryColumn({ name: 'PoNumber' })
   PoNumber: string;
 
   @Column({ type: 'nvarchar', length: 1, nullable: true })
@@ -224,6 +228,18 @@ export class ContractPOHeader {
 
   @Column({ type: 'nvarchar', length: 300, nullable: true })
   LongDesc: string;
-  // @OneToOne(() => ContractTerms, (contractTerms) => contractTerms.id)
+
+  // @OneToOne(() => ContractTerms, (contractTerms) => contractTerms.ContractNo)
   // contractTerm: ContractTerms;
+  // @OneToMany(() => ContractPOItem, item => item.poHeader)
+  // poItems: ContractPOItem[];
+
+  // @OneToMany(() => ContractPOSrvItem, srvItem => srvItem.poHeader)
+  // poSrvItems: ContractPOSrvItem[];
+
+  // @OneToMany(() => ContractPONote, note => note.poNumber)
+  // notes: ContractPONote[];
+
+  // @OneToMany(() => OrderHeader, order => order.contractNo)
+  // orderHeaders: OrderHeader[];
 }
