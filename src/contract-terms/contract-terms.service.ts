@@ -23,11 +23,11 @@ export class ContractTermsService {
       );
     }
     const newContractTerms = this.ContractTermsRepository.create(contractTerms);
-    const Contract_Terms =
+    const ContractTerms =
       await this.ContractTermsRepository.save(newContractTerms);
     return {
       msg: ' Contract Terms Added Succsesfully ',
-      Contract_Terms,
+      ContractTerms,
     };
   }
 

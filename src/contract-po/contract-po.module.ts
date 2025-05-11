@@ -8,6 +8,7 @@ import { ContractPOItem } from './entities/contractPOItem.entity';
 import { ContractPOSrvItem } from './entities/contractPOSrvItem.entity';
 import { OrderHeader } from './entities/orderHeader.entity';
 import { OrderItems } from './entities/orderItems.entity';
+import { ContractPONote } from './entities/contractPONote.entity';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { OrderItems } from './entities/orderItems.entity';
       ContractPOHeader,
       ContractPOItem,
       ContractPOSrvItem,
+      ContractPONote,
       OrderHeader,
       OrderItems,
     ]),

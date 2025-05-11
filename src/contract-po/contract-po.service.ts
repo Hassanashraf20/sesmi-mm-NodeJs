@@ -11,14 +11,23 @@ import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
 import { ConfigService } from '@nestjs/config';
 import { SapFetchService } from 'src/sap-fetch/sap-fetch.service';
 import { ContractPOHeader } from './entities/contractP0.entity';
+import { ContractPOItem } from './entities/contractPOItem.entity';
+import { ContractPOSrvItem } from './entities/contractPOSrvItem.entity';
+import { ContractPONote } from './entities/contractPONote.entity';
 
 @Injectable()
 export class ContractPoService {
   private readonly logger = new Logger(ContractPoService.name);
   constructor(
+    private readonly sapFetch: SapFetchService,
     @InjectRepository(ContractPOHeader)
     private readonly ContractPORepository: Repository<ContractPOHeader>,
-    private readonly sapFetch: SapFetchService,
+    @InjectRepository(ContractPOItem)
+    private readonly ContractPOItemRepository: Repository<ContractPOItem>,
+    @InjectRepository(ContractPOSrvItem)
+    private readonly ContractPOSrvItemRepository: Repository<ContractPOSrvItem>,
+    @InjectRepository(ContractPONote)
+    private readonly ContractPONoteRepository: Repository<ContractPONote>,
   ) {}
 
   async createContractPOHeader(req: any) {
@@ -47,6 +56,7 @@ export class ContractPoService {
       return dto;
     };
     let formattedDto = formatDateFields(req.body);
+    console.log('Formatted DTO:', JSON.stringify(formattedDto, null, 2));
 
     const csrfToken = await this.sapFetch.fetchCsrfToken();
     try {
@@ -133,6 +143,8 @@ export class ContractPoService {
           headers: this.sapFetch.getSapHeaders(),
         },
       );
+      const po = response.data.d.poNumber;
+      console.log('po', po);
 
       return response.data.d;
     } catch (error) {
@@ -176,5 +188,73 @@ export class ContractPoService {
       where: { PoNumber: poNumber },
     });
     return PoNumber;
+  }
+
+  async createContractPOItem(req: any) {
+    const poHeader = await this.GetPoNumber(req.poHeader);
+    if (!poHeader && poHeader !== req.poHeader) {
+      throw new HttpException(
+        'Contract PO Header not Match or invalid',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const contractPOItem = this.ContractPOItemRepository.create({
+      ...req.body,
+      PoHeader: poHeader,
+    });
+    const savedDataPOItem =
+      await this.ContractPOItemRepository.save(contractPOItem);
+    return {
+      msg: ' Contract POItem created successfully',
+      savedDataPOItem,
+    };
+  }
+  async createContractPOSrvItem(req: any) {
+    const poItem = await this.ContractPOItemRepository.findOne({
+      where: { poItem: req.poItem },
+    });
+    if (!poItem && poItem !== req.poItem) {
+      throw new HttpException(
+        'Contract PO Item not Match or invalid',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const poHeader = await this.GetPoNumber(req.poHeader);
+    if (!poHeader && poHeader !== req.poHeader) {
+      throw new HttpException(
+        'Contract PO Header not Match or invalid',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const contractPOSrvItem = this.ContractPOSrvItemRepository.create({
+      ...req.body,
+      PoHeader: poHeader,
+      poItem: poItem,
+    });
+    const savedDataPOItem =
+      await this.ContractPOSrvItemRepository.save(contractPOSrvItem);
+    return {
+      msg: ' Contract POItem created successfully',
+      savedDataPOItem,
+    };
+  }
+  async createContractPONote(req: any) {
+    const poNumber = await this.GetPoNumber(req.poNumber);
+    if (!poNumber && poNumber !== req.poNumber) {
+      throw new HttpException(
+        'Contract PO Number not Match or invalid',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const contractPONote = this.ContractPONoteRepository.create({
+      ...req.body,
+      PoNumber: poNumber,
+    });
+    const savedDataPONote =
+      await this.ContractPONoteRepository.save(contractPONote);
+    return {
+      msg: ' Contract PONote created successfully',
+      savedDataPONote,
+    };
   }
 }
