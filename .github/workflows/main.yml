@@ -1,0 +1,52 @@
+name: Deploy SESMI-NODEJS To BTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy SESMI-NODEJS to Cloud Foundry
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 📦 Install Dependencies
+        run: npm install
+
+      - name: 🔁 Cache Cloud Foundry CLI
+        id: cache-cf
+        uses: actions/cache@v3
+        with:
+          path: ./cf
+          key: cf-cli-v8-linux64
+
+      - name: ⬇️ Install Cloud Foundry CLI (if not cached)
+        if: steps.cache-cf.outputs.cache-hit != 'true'
+        run: |
+          curl -L "https://packages.cloudfoundry.org/stable?release=linux64&source=github" -o cf-cli.tgz
+          tar -xzf cf-cli.tgz
+
+      - name: 🛠️ Move cf CLI to /usr/local/bin
+        run: |
+          sudo mv ./cf /usr/local/bin/cf
+          chmod +x /usr/local/bin/cf
+          cf version
+
+      - name: 🔐 Login to Cloud Foundry
+        run: |
+          cf api ${{ secrets.CF_API }} --skip-ssl-validation
+          cf auth ${{ secrets.CF_USERNAME }} ${{ secrets.CF_PASSWORD }}
+          cf target -o ${{ secrets.CF_ORG }} -s ${{ secrets.CF_SPACE }}
+
+      - name: 🚀 Push App to Cloud Foundry
+        run: |
+          cf push --strategy rolling
