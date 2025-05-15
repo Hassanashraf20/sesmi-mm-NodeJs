@@ -4,7 +4,7 @@ import { ContractPOHeader } from './contractP0.entity';
 @Entity('ContractPOItem')
 export class ContractPOItem {
   @PrimaryColumn({ name: 'PoItem', length: 5 })
-  poItem: string;
+  PoItem: string;
 
   @Column({ name: 'IuidRelevant', length: 1, nullable: true })
   iuidRelevant: string;
@@ -117,8 +117,8 @@ export class ContractPOItem {
   @Column({ name: 'DeleteInd', length: 1, nullable: true })
   deleteInd: string;
 
-  @Column({ name: 'PoHeader', length: 13 })
-  poHeaderValue: string;
+  // @Column({ name: 'PoHeader', length: 13 })
+  // poHeaderValue: string;
 
   @Column({ name: 'Plant', length: 4, nullable: true })
   plant: string;
@@ -165,5 +165,5 @@ export class ContractPOItem {
   // Relationship with ContractPOHeader
   @ManyToOne(() => ContractPOHeader, (header) => header.PoNumber)
   @JoinColumn({ name: 'PoHeader' })
-  poHeader: ContractPOHeader;
+  PoHeader: ContractPOHeader;
 }

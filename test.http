@@ -5,7 +5,7 @@ Content-Type: application/json
     "PoNumber": "",
     "Flag": "",
     "DocType": "ZSES",
-    "Project": "M20030000",
+    "Project": "S25010000",
     "Vendor": "20000064",
     "PurchOrg": "1000",
     "PurchDoc": "",
@@ -46,6 +46,6 @@ Content-Type: application/json
     "VariationOrderValue": "0.00",
     "AddendumValue": "0.00",
     "RevisedContractValue": "0.00",
-    "SerType": "",
+    "SerType": "0001",
     "ContractPONoteNav": {}
 }

@@ -14,6 +14,8 @@ import { ContractPOHeader } from './entities/contractP0.entity';
 import { ContractPOItem } from './entities/contractPOItem.entity';
 import { ContractPOSrvItem } from './entities/contractPOSrvItem.entity';
 import { ContractPONote } from './entities/contractPONote.entity';
+import { mapPoItemData } from './utils/mapPoItemData';
+import { mapContractPOSrvItemData } from './utils/mapContractPOSrvItemData';
 
 @Injectable()
 export class ContractPoService {
@@ -118,7 +120,6 @@ export class ContractPoService {
   }
 
   async poExecuteAction(req: any) {
-    console.log('Request Service', req.body);
     const csrfToken = await this.sapFetch.fetchCsrfToken();
     console.log(csrfToken);
     const {
@@ -191,46 +192,64 @@ export class ContractPoService {
   }
 
   async createContractPOItem(req: any) {
-    const poHeader = await this.GetPoNumber(req.poHeader);
-    if (!poHeader && poHeader !== req.poHeader) {
+    console.log('req', req.PoHeader);
+    const { PoItem, PoHeader } = req;
+    const p = await this.GetPoNumber(PoHeader);
+    if (!p) {
       throw new HttpException(
-        'Contract PO Header not Match or invalid',
+        'Contract PO Header not found',
         HttpStatus.BAD_REQUEST,
       );
     }
-    const contractPOItem = this.ContractPOItemRepository.create({
-      ...req.body,
-      PoHeader: poHeader,
-    });
-    const savedDataPOItem =
-      await this.ContractPOItemRepository.save(contractPOItem);
-    return {
-      msg: ' Contract POItem created successfully',
-      savedDataPOItem,
-    };
+    if (!PoItem) {
+      throw new HttpException(
+        'Missing required fields in request body (PoItem, etc.)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const poItemData = mapPoItemData(req);
+    const contractPOItem = this.ContractPOItemRepository.create(poItemData);
+
+    try {
+      const savedDataPOItem =
+        await this.ContractPOItemRepository.save(contractPOItem);
+      return {
+        msg: 'Contract POItem created successfully',
+        savedDataPOItem,
+      };
+    } catch (error) {
+      console.error('Error saving POItem:', error);
+      throw new HttpException(
+        'Failed to create Contract POItem',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
-  async createContractPOSrvItem(req: any) {
+  async createContractPOSrvItem(body: any) {
+    const { SrvNo, PoItem, PoHeader } = body;
     const poItem = await this.ContractPOItemRepository.findOne({
-      where: { poItem: req.poItem },
+      where: { PoItem: PoItem },
     });
-    if (!poItem && poItem !== req.poItem) {
+    if (!poItem) {
       throw new HttpException(
         'Contract PO Item not Match or invalid',
         HttpStatus.BAD_REQUEST,
       );
     }
-    const poHeader = await this.GetPoNumber(req.poHeader);
-    if (!poHeader && poHeader !== req.poHeader) {
+    const poHeader = await this.GetPoNumber(PoHeader);
+    if (!poHeader) {
       throw new HttpException(
         'Contract PO Header not Match or invalid',
         HttpStatus.BAD_REQUEST,
       );
     }
-    const contractPOSrvItem = this.ContractPOSrvItemRepository.create({
-      ...req.body,
-      PoHeader: poHeader,
-      poItem: poItem,
-    });
+    if (!SrvNo) {
+      throw new HttpException('SrvNo is required', HttpStatus.BAD_REQUEST);
+    }
+    console.log('herre log :', SrvNo, poHeader, poItem);
+    const poSRVItemData = mapContractPOSrvItemData(body);
+    const contractPOSrvItem =
+      this.ContractPOSrvItemRepository.create(poSRVItemData);
     const savedDataPOItem =
       await this.ContractPOSrvItemRepository.save(contractPOSrvItem);
     return {
@@ -238,16 +257,16 @@ export class ContractPoService {
       savedDataPOItem,
     };
   }
-  async createContractPONote(req: any) {
-    const poNumber = await this.GetPoNumber(req.poNumber);
-    if (!poNumber && poNumber !== req.poNumber) {
+  async createContractPONote(body: any) {
+    const poNumber = await this.GetPoNumber(body.poNumber);
+    if (!poNumber && poNumber !== body.poNumber) {
       throw new HttpException(
         'Contract PO Number not Match or invalid',
         HttpStatus.BAD_REQUEST,
       );
     }
     const contractPONote = this.ContractPONoteRepository.create({
-      ...req.body,
+      ...body,
       PoNumber: poNumber,
     });
     const savedDataPONote =

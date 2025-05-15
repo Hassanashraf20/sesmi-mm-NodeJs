@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { ContractPoService } from './contract-po.service';
 import { CreateContractPOHeaderDto } from './DTO/ContractPo.dto';
 
@@ -11,9 +11,9 @@ export class ContractPoController {
     return this.contractPoService.createContractPOHeader(req);
   }
 
-  @Get('po-header')
-  async getPOHeaders(@Query() query: any) {
-    return await this.contractPoService.GetPOHeader(query);
+  @Get('po-header/:poHeader')
+  async getPOHeaders(@Param('poHeader') Poheader: any) {
+    return await this.contractPoService.GetPoNumber(Poheader);
   }
 
   @Post('po-execute')
@@ -23,8 +23,8 @@ export class ContractPoController {
   }
 
   @Post('po-item')
-  async createPoItem(@Body() body: any) {
-    return await this.contractPoService.createContractPOItem(body);
+  async createPoItem(@Req() req: any) {
+    return await this.contractPoService.createContractPOItem(req.body);
   }
 
   @Post('po-srv-item')

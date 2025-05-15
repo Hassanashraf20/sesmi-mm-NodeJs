@@ -1,7 +1,9 @@
 applications:
-  - name: SESMI-MM-NODEJS
-    memory: 1G
-    disk_quota: 1G
+  - name: SESMI-NODEJS
+    memory: 2G
+    disk_quota: 2G
     buildpacks:
       - nodejs_buildpack
-    command: npm start
+    command: npm run start:deploy
+    default-route: true
+    health-check-type: process

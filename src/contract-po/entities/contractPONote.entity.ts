@@ -10,14 +10,8 @@ import { ContractPOHeader } from './contractP0.entity';
 
 @Entity('ContractPONote')
 export class ContractPONote {
-  //   @PrimaryGeneratedColumn()
-  //   id: number;
-
   @Column({ name: 'Flag', length: 1, nullable: true })
   flag: string;
-
-  @Column({ name: 'PoNumber', length: 13 })
-  poNumberValue: string;
 
   @Column({ name: 'NoteText', length: 255, nullable: true })
   noteText: string;

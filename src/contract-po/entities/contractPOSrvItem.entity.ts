@@ -100,17 +100,17 @@ export class ContractPOSrvItem {
   @Column({ name: 'SubBoq', length: 4, nullable: true })
   subBoq: string;
 
-  @Column({ name: 'PurchDoc', length: 10, nullable: true })
+  @Column({ name: 'PurchDoc', length: 50, nullable: true })
   purchDoc: string;
 
   @Column({ name: 'Servicedesc', length: 40, nullable: true })
   servicedesc: string;
 
-  @Column({ name: 'PoHeader', length: 13 })
-  poHeaderValue: string;
+  // @Column({ name: 'PoHeader', length: 13 })
+  // poHeaderValue: string;
 
-  @Column({ name: 'PoItem', length: 5 })
-  poItemValue: string;
+  // @Column({ name: 'PoItem', length: 5, nullable: true })
+  // poItemValue: string;
 
   @Column({ name: 'Serviceno', length: 18, nullable: true })
   serviceno: string;
@@ -180,7 +180,7 @@ export class ContractPOSrvItem {
   @JoinColumn({ name: 'PoHeader' })
   poHeader: ContractPOHeader;
 
-  @ManyToOne(() => ContractPOItem, (PoItem) => PoItem.poItem)
+  @ManyToOne(() => ContractPOItem, (poItem) => poItem.PoItem)
   @JoinColumn({ name: 'PoItem' })
-  poItem: ContractPOItem;
+  PoItem: ContractPOItem;
 }
