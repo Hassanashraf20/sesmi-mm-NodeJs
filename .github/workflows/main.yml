@@ -37,13 +37,6 @@ jobs:
           sudo apt-get install -y cf8-cli
           cf version
 
-
-      - name: 🛠️ Move cf CLI to /usr/local/bin
-        run: |
-          sudo mv ./cf /usr/local/bin/cf
-          chmod +x /usr/local/bin/cf
-          cf version
-
       - name: 🔐 Login to Cloud Foundry
         run: |
           cf api ${{ secrets.CF_API }} --skip-ssl-validation
