@@ -1,11 +1,20 @@
 applications:
   - name: SESMI-MM-NODEJS
-    memory: 1G
-    disk_quota: 1G
+    memory: 2G
+    disk_quota: 2G
     buildpacks:
       - nodejs_buildpack
     command: npm run start:deploy
-    services:
-    - SESMI_CREDS
     default-route: true
     health-check-type: process
+    env:
+      DB_HOST: 5d982c5e-3b8e-4b09-9a3c-cd67cb971361.hana.trial-us10.hanacloud.ondemand.com
+      DB_PORT: 443
+      DB_USER: DBADMIN
+      DB_PASSWORD: Sap@123456789
+      DB_SCHEMA: SESMI
+      PORT: 3030
+      SAP_BASE_URL: http://S4H-QAS.bhgroup.local:8003/sap/opu/odata/CICSE/SESMI_SRV
+      SAP_CLIENT: 210
+      SAP_USERNAME: s.ahmed
+      SAP_PASSWORD: Sa@123456789
