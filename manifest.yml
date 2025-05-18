@@ -1,7 +1,7 @@
 applications:
   - name: SESMI-MM-NODEJS
-    memory: 2G
-    disk_quota: 2G
+    memory: 512M
+    disk_quota: 512M
     buildpacks:
       - nodejs_buildpack
     command: npm run start:deploy
