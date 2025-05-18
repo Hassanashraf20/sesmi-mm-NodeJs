@@ -25,8 +25,10 @@ jobs:
         run: npm install --force
 
 
+      # - name: Build Project
+      #   run: npm build
       - name: start Project
-        run: npm run start
+        run: npm run start:deploy
 
 
       - name: Install Cloud Foundry CLI
