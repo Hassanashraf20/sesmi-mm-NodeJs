@@ -19,17 +19,9 @@ jobs:
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
-        with:
-          node-version: "20.12.2"
-
-
-      - name: Clean Node Modules and Cache
-        run: |
-          rm -rf node_modules
-          rm -f package-lock.json
  
 
-      - name: Install Dependencies (Generate package-lock.json)
+      - name: Install Dependencies
         run: npm install --force
 
 
