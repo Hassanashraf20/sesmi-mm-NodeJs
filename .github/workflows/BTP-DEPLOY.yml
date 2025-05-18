@@ -27,8 +27,6 @@ jobs:
 
       - name: Build Project
         run: npm run build
-      - name: start Project
-        run: npm run start:deploy
 
 
       - name: Install Cloud Foundry CLI
@@ -62,4 +60,4 @@ jobs:
 
       - name: Deploy to Cloud Foundry
         run: |
-          cf push -f manifest.yml
+          cf push
