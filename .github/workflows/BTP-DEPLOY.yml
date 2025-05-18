@@ -1,0 +1,70 @@
+name: Deploy SESMI-NodeJs to SAP BTP
+
+
+on:
+  push:
+    branches:
+      - main
+ 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.12.2"
+
+
+      - name: Clean Node Modules and Cache
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+ 
+
+      - name: Install Dependencies (Generate package-lock.json)
+        run: npm install --force
+
+
+      - name: Build Project
+        run: npm run build
+
+
+      - name: Install Cloud Foundry CLI
+        run: |
+          # Add Cloud Foundry CLI public key and package repository
+          wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo gpg --dearmor -o /usr/share/keyrings/cli.cloudfoundry.org.gpg
+          echo "deb [signed-by=/usr/share/keyrings/cli.cloudfoundry.org.gpg] https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+
+ 
+
+          # Update package lists and install the cf CLI
+          sudo apt-get update
+          sudo apt-get install -y cf8-cli
+
+          # Verify the installation
+          cf --version
+ 
+
+      - name: Log in to Cloud Foundry
+        env:
+          CF_USERNAME: ${{ secrets.CF_USERNAME }}
+          CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
+          CF_API: ${{ secrets.CF_API }}
+          CF_SPACE: dev
+          CF_ORG: ${{ secrets.CF_ORG }}
+
+        run: |
+          cf api "$CF_API" --skip-ssl-validation
+          echo "$CF_PASSWORD" | cf login -u "$CF_USERNAME" -a "$CF_API" -o "$CF_ORG" -s "$CF_SPACE" --skip-ssl-validation
+
+
+      - name: Deploy to Cloud Foundry
+        run: |
+          cf push -f manifest.yml
