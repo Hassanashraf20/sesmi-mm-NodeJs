@@ -5,5 +5,7 @@ applications:
     buildpacks:
       - nodejs_buildpack
     command: npm run start:deploy
+    services:
+    - SESMI_CREDS
     default-route: true
     health-check-type: process
