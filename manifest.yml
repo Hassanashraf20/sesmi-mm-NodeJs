@@ -13,7 +13,6 @@ applications:
       DB_USER: DBADMIN
       DB_PASSWORD: Sap@123456789
       DB_SCHEMA: SESMI
-      PORT: 3030
       SAP_BASE_URL: http://S4H-QAS.bhgroup.local:8003/sap/opu/odata/CICSE/SESMI_SRV
       SAP_CLIENT: 210
       SAP_USERNAME: s.ahmed
