@@ -1,5 +1,5 @@
 applications:
-  - name: SESMI-NODEJS
+  - name: SESMI-MM-NODEJS
     memory: 2G
     disk_quota: 2G
     buildpacks:
