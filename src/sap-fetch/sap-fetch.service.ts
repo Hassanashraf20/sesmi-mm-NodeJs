@@ -14,7 +14,6 @@ export class SapFetchService {
   async fetchCsrfToken(): Promise<string> {
     try {
       const url = this.configService.get<string>('SAP_BASE_URL');
-      console.log('url', url);
       if (!url) {
         throw new Error('SAP_BASE_URL is not defined in the configuration.');
       }

@@ -21,6 +21,7 @@ import { mapContractPOSrvItemData } from './utils/mapContractPOSrvItemData';
 export class ContractPoService {
   private readonly logger = new Logger(ContractPoService.name);
   constructor(
+    private readonly configService: ConfigService,
     private readonly sapFetch: SapFetchService,
     @InjectRepository(ContractPOHeader)
     private readonly ContractPORepository: Repository<ContractPOHeader>,
@@ -65,7 +66,7 @@ export class ContractPoService {
       req.headers['x-csrf-token'] = csrfToken;
       const response = await executeHttpRequest(
         {
-          url: 'http://S4H-QAS.bhgroup.local:8003/sap/opu/odata/CICSE/SESMI_SRV/ContractPOHeaderSet?sap-client=210',
+          url: `${this.configService.get<string>('SAP_BASE_URL')}/ContractPOHeaderSet?sap-client=${this.configService.get<string>('SAP_CLIENT')}`,
         },
         {
           method: 'POST',
@@ -137,7 +138,7 @@ export class ContractPoService {
       req.headers['x-csrf-token'] = csrfToken;
       const response = await executeHttpRequest(
         {
-          url: `http://S4H-QAS.bhgroup.local:8003/sap/opu/odata/CICSE/SESMI_SRV/POExecuteAction?PoNo='${PoNo}'&Decision='${Decision}'&Notes='${Notes}'&WorkitemId='${WorkitemId}'&CreationType='${CreationType}'&OrderNo='${OrderNo}'&ActionType='${ActionType}'&Comments='${Comments}'`,
+          url: `${this.configService.get<string>('SAP_BASE_URL')}/POExecuteAction?PoNo='${PoNo}'&Decision='${Decision}'&Notes='${Notes}'&WorkitemId='${WorkitemId}'&CreationType='${CreationType}'&OrderNo='${OrderNo}'&ActionType='${ActionType}'&Comments='${Comments}'`,
         },
         {
           method: 'POST',
@@ -146,7 +147,6 @@ export class ContractPoService {
       );
       const po = response.data.d.poNumber;
       console.log('po', po);
-
       return response.data.d;
     } catch (error) {
       this.logger.error('Error executing PO action:', error);

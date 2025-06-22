@@ -1,2 +1,7 @@
 test.http
-node_modules
+node_modules/
+test/
+.git/
+.nyc_output/
+coverage/
+.DS_Store

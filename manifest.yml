@@ -2,6 +2,8 @@ applications:
   - name: SESMI-MM-NODEJS
     memory: 1G
     disk_quota: 1G
+    instances: 1
+    stack: cflinuxfs4
     buildpacks:
       - nodejs_buildpack
     command: npm run start:deploy
@@ -13,7 +15,10 @@ applications:
       DB_USER: DBADMIN
       DB_PASSWORD: Sap@123456789
       DB_SCHEMA: SESMI
-      SAP_BASE_URL: http://S4H-QAS.bhgroup.local:8003/sap/opu/odata/CICSE/SESMI_SRV
+      SAP_BASE_URL: http://169.50.86.180:8003/sap/opu/odata/CICSE/SESMI_SRV
       SAP_CLIENT: 210
       SAP_USERNAME: s.ahmed
       SAP_PASSWORD: Sa@123456789
+    services:
+      - connectivity-service
+      - destination-service
