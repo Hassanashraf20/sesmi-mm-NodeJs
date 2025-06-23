@@ -1,8 +1,7 @@
 import { ContractPOHeader } from 'src/contract-po/entities/contractP0.entity';
-import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 @Entity('ContHeader')
 export class ContractTerms {
-  @OneToOne(() => ContractPOHeader, (contract) => contract.PurchDoc)
   @PrimaryColumn({ type: 'nvarchar' })
   ContractNo: ContractPOHeader;
   @PrimaryColumn({ type: 'nvarchar', length: 4 })
@@ -103,4 +102,10 @@ export class ContractTerms {
 
   @Column({ type: 'nvarchar', length: 1, nullable: true })
   UpdateInd?: string;
+  @OneToOne(
+    () => ContractPOHeader,
+    (contractPOHeader) => contractPOHeader.contractTerms,
+  )
+  @JoinColumn({ name: 'PoNumber', referencedColumnName: 'PoNumber' })
+  contractPOHeader?: ContractPOHeader;
 }

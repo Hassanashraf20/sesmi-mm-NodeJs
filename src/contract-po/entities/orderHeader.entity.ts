@@ -1,5 +1,13 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { ContractPOHeader } from './contractP0.entity';
+import { OrderItems } from './orderItems.entity';
 
 @Entity('OrderHeader')
 export class OrderHeader {
@@ -80,9 +88,10 @@ export class OrderHeader {
 
   @Column({ name: 'Meins', length: 3, nullable: true })
   meins: string;
-
-  // Relationship with ContractPOHeader
-  @ManyToOne(() => ContractPOHeader, (PoHeader) => PoHeader.PoNumber)
+  // Relationships
+  @ManyToOne(() => ContractPOHeader, (header) => header.orderHeaders)
   @JoinColumn({ name: 'ContractNo' })
   contractNo: ContractPOHeader;
+  @OneToMany(() => OrderItems, (orderItem) => orderItem.orderNo)
+  orderItems: OrderItems[];
 }

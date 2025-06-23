@@ -46,6 +46,7 @@ export function mapPoItemData(req: any): Partial<ContractPOItem> {
     wbsElement: req.WbsElement,
     noLimit: req.NoLimit,
     deliveryDate: req.DeliveryDate,
-    PoHeader: req.PoHeader, // Link by object reference
+    poHeader: req.PoHeader,
+    poHeaderId: req.PoHeader, // Link by object reference
   };
 }

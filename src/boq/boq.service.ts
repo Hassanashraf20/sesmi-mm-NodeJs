@@ -10,12 +10,33 @@ import { SapFetchService } from 'src/sap-fetch/sap-fetch.service';
 @Injectable()
 export class BoqService {
   private readonly logger = new Logger(BoqService.name);
-
   constructor(
     private readonly configService: ConfigService,
     private readonly sapFetch: SapFetchService,
   ) {}
 
+  async createBOQ(req: any): Promise<any> {
+    const csrfToken = await this.sapFetch.fetchCsrfToken();
+    try {
+      req.headers['x-csrf-token'] = csrfToken;
+      const response = await executeHttpRequest(
+        {
+          url: `${this.configService.get<string>('SAP_BASE_URL')}/AttachmentSet?sap-client=${this.configService.get<string>('SAP_CLIENT')}`,
+        },
+        {
+          method: 'POST',
+          data: req.body,
+          headers: this.sapFetch.getSapHeaders(),
+        },
+      );
+      const res = response.data.d;
+      console.log('res', res);
+      return res;
+    } catch (error) {
+      this.logger.error('Error creating BOQ action:', error);
+      throw new InternalServerErrorException('Failed to execute BOQ action.');
+    }
+  }
   async getBoqSubItems(filters: any): Promise<any> {
     const filterString = this.buildODataBoqSubItemFilter(filters);
     const sapUrl = this.configService.get<string>('SAP_BASE_URL');

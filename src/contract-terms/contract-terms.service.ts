@@ -13,16 +13,17 @@ export class ContractTermsService {
     private readonly contractPoHeader: ContractPoService,
   ) {}
 
-  async createContractTerms(contractTerms: any): Promise<any> {
-    const contractTermsData = contractTerms.ContractNo;
-    const contractPoHeader =
-      this.contractPoHeader.GetPoNumber(contractTermsData);
-    if (!contractPoHeader || contractPoHeader !== contractTermsData) {
+  async createContractTerms(body: any): Promise<any> {
+    const contractPurchDoc = body.ContractNo;
+    const contractPoData =
+      await this.contractPoHeader.GetPurchDoc(contractPurchDoc);
+    console.log('contractPoData', contractPoData);
+    if (!contractPoData || contractPoData.PurchDoc !== contractPurchDoc) {
       throw new BadRequestException(
         'ContractNo does not match any PONumber in contract PO header',
       );
     }
-    const newContractTerms = this.ContractTermsRepository.create(contractTerms);
+    const newContractTerms = this.ContractTermsRepository.create(body);
     const ContractTerms =
       await this.ContractTermsRepository.save(newContractTerms);
     return {

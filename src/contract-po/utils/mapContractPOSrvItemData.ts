@@ -5,7 +5,7 @@ export function mapContractPOSrvItemData(
 ): Partial<ContractPOSrvItem> {
   return {
     srvNo: body.SrvNo,
-    PoItem: body.PoItem,
+    poItem: body.PoItem,
     poHeader: body.PoHeader,
     asBuild2: body.AsBuild2,
     deletePo: body.DeletePo,

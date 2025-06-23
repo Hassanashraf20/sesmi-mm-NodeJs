@@ -1,4 +1,11 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { BoqService } from './boq.service';
 import {
   ApiTags,
@@ -19,6 +26,11 @@ import {
 @Controller('boq')
 export class BoqController {
   constructor(private readonly boqSubItemService: BoqService) {}
+
+  @Post('create-boq')
+  async createBoq(@Req() req: any) {
+    return await this.boqSubItemService.createBOQ(req);
+  }
 
   @Get('itemset')
   @ApiOperation({

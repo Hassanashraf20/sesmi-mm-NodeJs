@@ -175,12 +175,17 @@ export class ContractPOSrvItem {
   @Column({ name: 'Buildingno', length: 8, nullable: true })
   buildingno: string;
 
+  // Foreign key columns
+  @Column({ name: 'PoHeader', length: 13 })
+  poHeaderId: string;
+
+  @Column({ name: 'PoItem', length: 5 })
+  poItemId: string;
   // Relationships
-  @ManyToOne(() => ContractPOHeader, (Poheader) => Poheader.PoNumber)
+  @ManyToOne(() => ContractPOHeader, (header) => header.poSrvItems)
   @JoinColumn({ name: 'PoHeader' })
   poHeader: ContractPOHeader;
-
-  @ManyToOne(() => ContractPOItem, (poItem) => poItem.PoItem)
+  @ManyToOne(() => ContractPOItem, (item) => item.poSrvItems)
   @JoinColumn({ name: 'PoItem' })
-  PoItem: ContractPOItem;
+  poItem: ContractPOItem;
 }

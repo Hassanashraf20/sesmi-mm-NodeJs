@@ -4,9 +4,10 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityPropertyNotFoundError, Repository } from 'typeorm';
 import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
 import { ConfigService } from '@nestjs/config';
 import { SapFetchService } from 'src/sap-fetch/sap-fetch.service';
@@ -119,7 +120,6 @@ export class ContractPoService {
       );
     }
   }
-
   async poExecuteAction(req: any) {
     const csrfToken = await this.sapFetch.fetchCsrfToken();
     console.log(csrfToken);
@@ -133,7 +133,6 @@ export class ContractPoService {
       ActionType,
       Comments,
     } = req.body;
-
     try {
       req.headers['x-csrf-token'] = csrfToken;
       const response = await executeHttpRequest(
@@ -147,13 +146,20 @@ export class ContractPoService {
       );
       const po = response.data.d.poNumber;
       console.log('po', po);
+      if (response.data.d) {
+        await this.ContractPORepository.update(
+          { PoNumber: PoNo },
+          { PurchDoc: '900239' },
+        );
+        console.log(`Updated ContractPOHeader with PurchDoc: ${po}`);
+      }
+      console.log('response', response);
       return response.data.d;
     } catch (error) {
       this.logger.error('Error executing PO action:', error);
       throw new InternalServerErrorException('Failed to execute PO action.');
     }
   }
-
   async GetPOHeader(query: any) {
     try {
       if (query) {
@@ -183,33 +189,45 @@ export class ContractPoService {
       );
     }
   }
-
+  async getAllContracts(): Promise<any> {
+    const contracts = await this.ContractPORepository.find();
+    if (!contracts) {
+      throw new NotFoundException('contracts does not exist');
+    }
+    return {
+      msg: 'Contracts Retrived Succsesfully ',
+      Count: contracts.length,
+      contracts,
+    };
+  }
   async GetPoNumber(poNumber: any) {
     const PoNumber = await this.ContractPORepository.findOne({
       where: { PoNumber: poNumber },
     });
     return PoNumber;
   }
-
+  async GetPurchDoc(purchDoc: any) {
+    const PoNumber = await this.ContractPORepository.findOne({
+      where: { PurchDoc: purchDoc },
+    });
+    return PoNumber;
+  }
   async createContractPOItem(req: any) {
-    console.log('req', req.PoHeader);
+    console.log('reqPoHeader', req.PoHeader);
     const { PoItem, PoHeader } = req;
+    console.log('reqPoItem', PoItem);
     const p = await this.GetPoNumber(PoHeader);
-    if (!p) {
+    if (!p || p.PoNumber !== PoHeader || !PoItem) {
       throw new HttpException(
-        'Contract PO Header not found',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    if (!PoItem) {
-      throw new HttpException(
-        'Missing required fields in request body (PoItem, etc.)',
+        'Contract PO Header not found and Missing required fields in request body',
         HttpStatus.BAD_REQUEST,
       );
     }
     const poItemData = mapPoItemData(req);
-    const contractPOItem = this.ContractPOItemRepository.create(poItemData);
-
+    const contractPOItem = this.ContractPOItemRepository.create({
+      ...poItemData,
+      poHeader: p,
+    });
     try {
       const savedDataPOItem =
         await this.ContractPOItemRepository.save(contractPOItem);
@@ -222,6 +240,35 @@ export class ContractPoService {
       throw new HttpException(
         'Failed to create Contract POItem',
         HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+  async findOnePOItem(poHeader: any) {
+    try {
+      console.log('SpoHeader', poHeader);
+      const item = await this.ContractPOItemRepository.findOne({
+        where: { poHeaderId: poHeader },
+        relations: ['poHeader'],
+      });
+      if (!item) {
+        throw new HttpException(
+          'Contract PO Item not found',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return item;
+    } catch (error) {
+      console.error('Error finding POItem:', error);
+      if (error instanceof EntityPropertyNotFoundError) {
+        throw new HttpException(
+          'Invalid query property',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      throw new HttpException(
+        `Failed to find Contract POItem for : ${poHeader}`,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+        error.message,
       );
     }
   }
@@ -256,6 +303,28 @@ export class ContractPoService {
       msg: ' Contract POItem created successfully',
       savedDataPOItem,
     };
+  }
+  async findOnePOSrvItem(poHeader: any) {
+    try {
+      const item = await this.ContractPOSrvItemRepository.findOne({
+        where: { poHeaderId: poHeader },
+        relations: ['poHeader'],
+      });
+      if (!item) {
+        throw new HttpException(
+          'Contract PO Service Item not found',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return item;
+    } catch (error) {
+      console.error('Error finding POSrvItem:', error);
+      throw new HttpException(
+        `Failed to find Contract PO Service Item : ${poHeader}`,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+        error.message,
+      );
+    }
   }
   async createContractPONote(body: any) {
     const poNumber = await this.GetPoNumber(body.poNumber);

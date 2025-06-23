@@ -49,13 +49,11 @@ export class OrderItems {
   @Column({ name: 'BoqDesc', length: 50, nullable: true })
   boqDesc: string;
 
-  // Relationship with ContractPOHeader
-  @ManyToOne(() => ContractPOHeader, (header) => header.PoNumber)
+  // Relationships
+  @ManyToOne(() => ContractPOHeader, (header) => header.orderItems)
   @JoinColumn({ name: 'ContractNo' })
   contractNo: ContractPOHeader;
-
-  // Relationship with OrderHeader
-  @ManyToOne(() => OrderHeader, (header) => header.orderNo)
+  @ManyToOne(() => OrderHeader, (header) => header.orderItems)
   @JoinColumn({ name: 'OrderNo' })
   orderNo: OrderHeader;
 }

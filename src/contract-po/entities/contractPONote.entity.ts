@@ -18,7 +18,7 @@ export class ContractPONote {
 
   // Relationship with ContractPOHeader
   @PrimaryColumn({ type: 'varchar', name: 'PoNumber', length: 13 })
-  @ManyToOne(() => ContractPOHeader, (PoHeader) => PoHeader.PoNumber)
+  @ManyToOne(() => ContractPOHeader, (PoHeader) => PoHeader.notes)
   @JoinColumn({ name: 'PoNumber' })
   poNumber: ContractPOHeader;
 }
