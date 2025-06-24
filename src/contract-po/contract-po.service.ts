@@ -125,6 +125,7 @@ export class ContractPoService {
     console.log(csrfToken);
     const {
       PoNo,
+      PurchDoc,
       Decision,
       Notes,
       WorkitemId,
@@ -149,7 +150,7 @@ export class ContractPoService {
       if (response.data.d) {
         await this.ContractPORepository.update(
           { PoNumber: PoNo },
-          { PurchDoc: '900239' },
+          { PurchDoc: PurchDoc },
         );
         console.log(`Updated ContractPOHeader with PurchDoc: ${po}`);
       }

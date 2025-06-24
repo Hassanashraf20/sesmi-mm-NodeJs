@@ -22,7 +22,6 @@ export class ContractPoController {
   }
   @Post('po-execute')
   async poExecuteAction(@Req() req: any) {
-    console.log('Request controller', req.body);
     return await this.contractPoService.poExecuteAction(req);
   }
 

@@ -1,41 +1,47 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
 import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
 import { SapFetchService } from 'src/sap-fetch/sap-fetch.service';
+import { BOQHeader } from './entities/BOQ-Header.entity';
+import { Repository } from 'typeorm';
+import { CreateBOQHeaderDto } from './DTO/boq-header.dto';
 
 @Injectable()
 export class BoqService {
   private readonly logger = new Logger(BoqService.name);
   constructor(
+    @InjectRepository(BOQHeader)
+    private readonly BOQRepository: Repository<BOQHeader>,
     private readonly configService: ConfigService,
     private readonly sapFetch: SapFetchService,
   ) {}
 
-  async createBOQ(req: any): Promise<any> {
-    const csrfToken = await this.sapFetch.fetchCsrfToken();
-    try {
-      req.headers['x-csrf-token'] = csrfToken;
-      const response = await executeHttpRequest(
-        {
-          url: `${this.configService.get<string>('SAP_BASE_URL')}/AttachmentSet?sap-client=${this.configService.get<string>('SAP_CLIENT')}`,
-        },
-        {
-          method: 'POST',
-          data: req.body,
-          headers: this.sapFetch.getSapHeaders(),
-        },
-      );
-      const res = response.data.d;
-      console.log('res', res);
-      return res;
-    } catch (error) {
-      this.logger.error('Error creating BOQ action:', error);
-      throw new InternalServerErrorException('Failed to execute BOQ action.');
+  async createBOQ(body: CreateBOQHeaderDto): Promise<any> {
+    const boq = this.BOQRepository.create(body);
+    if (!boq || !body) {
+      throw new BadRequestException('No valid data provided');
     }
+    const boqData = await this.BOQRepository.save(boq);
+    return {
+      msg: 'BOQ Added Succsesfully into HANA db',
+      boqData,
+    };
+  }
+  async findBoqbyId(boqId: string): Promise<any> {
+    const boqData = await this.BOQRepository.findOne({ where: { boq: boqId } });
+    if (!boqData) {
+      throw new BadRequestException('No valid data provided');
+    }
+    return {
+      msg: `BOQ retrived for: ${boqId}`,
+      boqData,
+    };
   }
   async getBoqSubItems(filters: any): Promise<any> {
     const filterString = this.buildODataBoqSubItemFilter(filters);
@@ -64,7 +70,6 @@ export class BoqService {
       );
     }
   }
-
   async getBoqTree(filters: any): Promise<any> {
     const filterString = this.buildOdataBoqTreeFilter(filters);
     const sapUrl = this.configService.get<string>('SAP_BASE_URL');

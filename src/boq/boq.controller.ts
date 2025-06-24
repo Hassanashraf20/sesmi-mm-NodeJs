@@ -1,7 +1,9 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   Get,
+  Param,
   Post,
   Query,
   Req,
@@ -18,6 +20,7 @@ import {
   ApiProduces,
   ApiConsumes,
 } from '@nestjs/swagger';
+import { CreateBOQHeaderDto } from './DTO/boq-header.dto';
 
 @ApiTags('BOQ (Bill of Quantities)')
 @ApiBearerAuth()
@@ -28,8 +31,12 @@ export class BoqController {
   constructor(private readonly boqSubItemService: BoqService) {}
 
   @Post('create-boq')
-  async createBoq(@Req() req: any) {
-    return await this.boqSubItemService.createBOQ(req);
+  async createBoq(@Body() body: CreateBOQHeaderDto) {
+    return await this.boqSubItemService.createBOQ(body);
+  }
+  @Get('/:boq')
+  async findBoq(@Param('boq') boqId: string) {
+    return await this.boqSubItemService.findBoqbyId(boqId);
   }
 
   @Get('itemset')
