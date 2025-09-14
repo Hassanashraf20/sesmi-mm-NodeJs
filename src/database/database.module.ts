@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ContractTerms } from 'src/contract-terms/entities/contract-terms.entity';
 
 @Module({
   imports: [
@@ -16,7 +15,7 @@ import { ContractTerms } from 'src/contract-terms/entities/contract-terms.entity
       ],
       synchronize: false,
       encrypt: true,
-      sslValidateCertificate: false,
+      sslValidateCertificate: true,
       logging: ['query', 'error'],
     }),
   ],
